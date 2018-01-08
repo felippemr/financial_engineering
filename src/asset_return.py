@@ -1,3 +1,5 @@
 
-def calculate_future_asset_return(future_stock_price, current_stock_price):
-    return round((future_stock_price - current_stock_price) / current_stock_price, 1)
+def calculate_rate_of_return(
+    current_price: float, future_price: float,
+) -> float:
+    return round((future_price - current_price) / current_price, 1)
