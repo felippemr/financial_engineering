@@ -27,6 +27,7 @@ class Position:
         self._opened_at = opened_at
         self._quantity = quantity
         self._price_per_unit = price_per_unit
+        self._closed_at = None
 
     def __hash__(self):
         return self._id
@@ -37,11 +38,29 @@ class Position:
         )
 
     @property
+    def id(self):
+        return self._id
+
+    @property
     def quantity(self) -> Decimal:
         return self._quantity
 
-    def opened_at(self, as_of: datetime) -> bool:
-        return self._opened_at <= as_of
+    @property
+    def closed_at(self) -> Decimal:
+        return self._closed_at
+
+    @closed_at.setter
+    def closed_at(self, value: datetime):
+        if self._opened_at >= value:
+            raise ValueError("Can't close in the past!")
+
+        self._closed_at = value
+
+    def opened_as_of(self, as_of: datetime) -> bool:
+        if self._closed_at and self._closed_at <= as_of:
+            return False
+
+        return self._opened_at >= as_of
 
     @property
     def price_per_unit(self):
@@ -112,7 +131,7 @@ class Asset:
         for position in self.positions:
             if initial:
                 total += position.value
-            elif position.opened_at(as_of):
+            elif position.opened_as_of(as_of):
                 total += (
                     position.quantity
                     * price_as_of_date_time
