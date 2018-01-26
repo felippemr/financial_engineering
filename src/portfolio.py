@@ -79,7 +79,7 @@ class Asset:
 
     def __init__(self, exchange: Exchange, symbol: str, data_provider):
         try:
-            self.__dict__ = self.__instances['{}-{}'.format(symbol, exchange)].__dict__
+            self.__dict__ = self.__instances['{}-{}'.format(symbol, exchange)]
         except KeyError:
             self._id = next(GLOBAL_IDENTITY)
             self._exchange = exchange
@@ -88,7 +88,7 @@ class Asset:
             self._positions = {}
             self._data_provider = data_provider
 
-            self.__instances['{}-{}'.format(symbol, exchange)] = self
+            self.__instances['{}-{}'.format(symbol, exchange)] = self.__dict__
 
     def __hash__(self):
         return self._id
