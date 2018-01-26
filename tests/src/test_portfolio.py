@@ -82,13 +82,33 @@ class TestPositionOpenedAsOf:
         position.closed_at = future_date
         assert position.opened_as_of(future_date) is False
 
-    def test_returns_true_if_closed_date_gt_than_param_and_opened_gt_param(
+    def test_returns_true_if_closed_date_gt_than_param_and_opened_lt_param(
+        self, position, as_of
+    ):
+        position.closed_at = as_of + timedelta(microseconds=2)
+        a_date = as_of + timedelta(microseconds=1)
+        assert position.opened_as_of(a_date) is True
+
+    def test_returns_true_if_closed_date_gt_param_and_opened_eq_param(
         self, position, as_of
     ):
         position.closed_at = as_of + timedelta(microseconds=1)
         assert position.opened_as_of(as_of) is True
 
-    def test_returns_true_if_closed_date_gt_param_and_opened_eq_param(
+    def test_returns_false_if_closed_date_gt_param_and_opened_lt_param(
+        self, position, as_of
+    ):
+        position.closed_at = as_of + timedelta(microseconds=1)
+        past_date = as_of - timedelta(microseconds=1)
+        assert position.opened_as_of(past_date) is False
+
+    def test_returns_false_if_not_closed_date_and_opened_lt_param(
+        self, position, as_of
+    ):
+        past_date = as_of - timedelta(microseconds=1)
+        assert position.opened_as_of(past_date) is False
+
+    def test_returns_true_if_not_closed_date_and_opened_eq_param(
         self, position, as_of
     ):
         position.closed_at = as_of + timedelta(microseconds=1)

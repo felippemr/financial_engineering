@@ -60,7 +60,7 @@ class Position:
         if self._closed_at and self._closed_at <= as_of:
             return False
 
-        return self._opened_at >= as_of
+        return self._opened_at <= as_of
 
     @property
     def price_per_unit(self):
@@ -169,7 +169,7 @@ class Portfolio:
 class DummyDataProvider:
 
     def get_price_for_asset(self, asset: Asset, as_of: datetime):
-        return randint(0, 1000)
+        return Decimal(randint(0, 1000))
 
 
 def build_scenario():
@@ -186,7 +186,6 @@ def build_scenario():
         ('AAPL', Decimal(400), as_of + timedelta(days=32), Decimal(90)),
         ('MSFT', Decimal(50), as_of + timedelta(days=30), Decimal(90)),
     ]
-
 
     for item in raw_data:
         symbol, quantity, opened, price = item
