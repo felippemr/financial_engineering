@@ -68,7 +68,7 @@ class Position:
 
     @property
     def value(self) -> Decimal:
-        return self._quantity * self._price_per_unit
+        return abs(self._quantity) * self._price_per_unit
 
     def to_dict(self) -> Dict[int, 'Position']:
         return {self._id: self}
@@ -133,7 +133,7 @@ class Asset:
                 total += position.value
             elif position.opened_as_of(as_of):
                 total += (
-                    position.quantity
+                    abs(position.quantity)
                     * price_as_of_date_time
                 )
 
